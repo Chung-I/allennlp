@@ -69,7 +69,6 @@ def create_parser(
         "evaluate": Evaluate(),
         "predict": Predict(),
         "elmo": Elmo(),
-        "fine-tune": FineTune(),
         "dry-run": DryRun(),
         "make-vocab": DryRun(),  # deprecated, but keeping for backward compatibility.
         "test-install": TestInstall(),
