@@ -28,3 +28,4 @@ from allennlp.training.metrics.sequence_accuracy import SequenceAccuracy
 from allennlp.training.metrics.span_based_f1_measure import SpanBasedF1Measure
 from allennlp.training.metrics.unigram_recall import UnigramRecall
 from allennlp.training.metrics.auc import Auc
+from allennlp.training.metrics.wer import WER

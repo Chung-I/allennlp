@@ -55,3 +55,11 @@ class TestCharacterTokenizer(AllenNlpTestCase):
         # Note that we've added one to the utf-8 encoded bytes, to account for masking.
         expected_tokens = [259, 196, 166, 196, 185, 196, 163, 196, 162, 98, 99, 102, 260]
         assert tokens == expected_tokens
+
+    def test_non_word_ending_suffix(self):
+        tokenizer = CharacterTokenizer(non_word_end_suffix="##")
+        sent = "A, small sentence."
+        tokens = [t.text for t in tokenizer.tokenize(sent)]
+        expected_tokens = ["A##", ",", "s##", "m##", "a##", "l##", "l", "s##",
+                           "e##", "n##", "t##", "e##", "n##", "c##", "e##", "."]
+        assert tokens == expected_tokens

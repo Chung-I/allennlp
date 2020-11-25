@@ -45,6 +45,7 @@ class CharacterTokenizer(Tokenizer):
         lowercase_characters: bool = False,
         start_tokens: List[Union[str, int]] = None,
         end_tokens: List[Union[str, int]] = None,
+        non_word_end_suffix: str = None,
     ) -> None:
         # TODO(brendanr): Add length truncation.
         self._byte_encoding = byte_encoding
@@ -54,6 +55,9 @@ class CharacterTokenizer(Tokenizer):
         # this makes sure they show up in the right order.
         self._start_tokens.reverse()
         self._end_tokens = end_tokens or []
+        # If this is not None, append this suffix to every character that is not
+        # a word-ending character.
+        self._non_word_end_suffix = non_word_end_suffix
 
     @overrides
     def tokenize(self, text: str) -> List[Token]:
@@ -63,6 +67,18 @@ class CharacterTokenizer(Tokenizer):
             # We add 1 here so that we can still use 0 for masking, no matter what bytes we get out
             # of this.
             tokens = [Token(text_id=c + 1) for c in text.encode(self._byte_encoding)]
+        elif self._non_word_end_suffix is not None:
+            tokens = []
+            idx = 0
+            while idx < len(text):
+                if idx+1 == len(text) or text[idx+1] == " ":
+                    tokens.append(text[idx])
+                    idx += 1
+                else:
+                    tokens.append(text[idx] + self._non_word_end_suffix)
+                idx += 1
+            tokens = [Token(t) for t in tokens]
+
         else:
             tokens = [Token(t) for t in list(text)]
         for start_token in self._start_tokens:
